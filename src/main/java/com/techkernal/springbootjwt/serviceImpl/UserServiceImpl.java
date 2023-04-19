@@ -5,6 +5,7 @@ import com.techkernal.springbootjwt.payload.UserDto;
 import com.techkernal.springbootjwt.repository.UserRepository;
 import com.techkernal.springbootjwt.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -13,8 +14,12 @@ public class UserServiceImpl implements UserService {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Override
     public UserDto createUser(UserDto userDto) {
+        userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
         Users savedUser = userRepository.save(userDtoToEntity(userDto));
         return userEntityToDto(savedUser);
     }
